@@ -22,7 +22,7 @@ class OfficeSpaceResource extends JsonResource
             'price' => $this->price,
             'thumbnail' => $this->thumbnail,
             'about' => $this->about,
-            'city' => new CityResource($this->whenLoaded('photos')), // new hanya mengambil sebuah/satu object saja
+            'city' => new CityResource($this->city), // new hanya mengambil sebuah/satu object saja
             'photos' => OfficeSpacePhotoResource::collection($this->whenLoaded('photos')), // collection mengambil lebih dari 1
             'benefits' => OfficeSpaceBenefitResource::collection($this->whenLoaded('benefits')),
         ];
