@@ -9,16 +9,34 @@ use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
+     // Mengembalikan daftar semua kota beserta jumlah officeSpaces
     public function index()
     {
+        // Menggunakan eager loading untuk mendapatkan jumlah officeSpaces
         $cities = City::withCount('officeSpaces')->get();
+
+        // Mengembalikan koleksi CityResource
         return CityResource::collection($cities);
     }
 
-    public function show(City $city) //model binding
+    // Mengembalikan detail kota dengan officeSpaces terkait
+    public function show(City $city)
     {
-        $city->load(['officeSpace.city', 'officeSpace.photos']);
-        $city->loadCount('officeSpace');
+        // Validasi apakah city ditemukan dan relasi ada
+        // if (!$city) {
+        //     return response()->json(['message' => 'City not found'], 404);
+        // }
+
+        // Eager loading pada relasi terkait
+        $city->load([
+            'officeSpaces.city', // Relasi ke model City dalam officeSpaces
+            'officeSpaces.photos' // Relasi photos di dalam officeSpaces
+        ]);
+
+        // Menambahkan jumlah officeSpaces
+        $city->loadCount('officeSpaces');
+
+        // Mengembalikan CityResource
         return new CityResource($city);
     }
 }
