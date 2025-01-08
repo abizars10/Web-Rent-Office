@@ -3,6 +3,7 @@ import { Link, useParams } from "react-router-dom";
 import { City } from "../types/type";
 import axios from "axios";
 import OfficeCard from "../components/OfficeCard";
+import Navbar from "../components/Navbar";
 
 export default function CityDetails() {
   const { slug } = useParams<{ slug: string }>();
@@ -43,36 +44,7 @@ export default function CityDetails() {
 
   return (
     <>
-      <nav className="bg-white">
-        <div className="flex items-center justify-between w-full max-w-[1130px] py-[22px] mx-auto">
-          <a href="index.html">
-            <img src="/assets/images/logos/logo.svg" alt="logo" />
-          </a>
-          <ul className="flex items-center gap-[50px] w-fit">
-            <li>
-              <Link to={`/`}>
-                <a href="#">Browse</a>
-              </Link>
-            </li>
-            <li>
-              <a href="">Popular</a>
-            </li>
-            <li>
-              <a href="">Categories</a>
-            </li>
-            <li>
-              <a href="">Events</a>
-            </li>
-            <li>
-              <a href="view-booking-details.html">My Booking</a>
-            </li>
-          </ul>
-          <a href="#" className="flex items-center gap-[10px] rounded-full border border-[#000929] py-3 px-5">
-            <img src="/assets/images/icons/call.svg" className="w-6 h-6" alt="icon" />
-            <span className="font-semibold">Contact Us</span>
-          </a>
-        </div>
-      </nav>
+      <Navbar></Navbar>
       <header className="flex flex-col w-full">
         <section id="Hero-Banner" className="relative flex h-[434px]">
           <div id="Hero-Text" className="relative flex flex-col w-full max-w-[650px] h-fit rounded-[30px] border border-[#E0DEF7] p-10 gap-[30px] bg-white mt-[70px] ml-[calc((100%-1130px)/2)] z-10">
@@ -90,7 +62,9 @@ export default function CityDetails() {
         <h2 className="font-bold text-[32px] leading-[48px] text-nowrap">Browse Offices</h2>
         <div className="grid grid-cols-3 gap-[30px]">
           {city.officeSpaces.map((office) => (
-            <OfficeCard key={office.id} office={office}></OfficeCard>
+            <Link key={office.id} to={`/office/${office.slug}`}>
+              <OfficeCard office={office}></OfficeCard>
+            </Link>
           ))}
         </div>
       </section>

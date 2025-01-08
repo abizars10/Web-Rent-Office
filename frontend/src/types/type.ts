@@ -1,6 +1,7 @@
 export interface Office {
   id: number;
   price: number;
+  address: string;
   duration: number;
   name: string;
   slug: string;

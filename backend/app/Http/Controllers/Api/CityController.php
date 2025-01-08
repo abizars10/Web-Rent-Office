@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\Api\CityResource;
 use App\Models\City;
-use Illuminate\Http\Request;
 
 class CityController extends Controller
 {
@@ -13,7 +12,7 @@ class CityController extends Controller
     public function index()
     {
         // Menggunakan eager loading untuk mendapatkan jumlah officeSpaces
-        $cities = City::withCount('officeSpaces')->get();
+        $cities = City::withCount('officeSpaces')->with(['officeSpaces.photos', 'officeSpaces.benefits']) ->get();
 
         // Mengembalikan koleksi CityResource
         return CityResource::collection($cities);
@@ -22,10 +21,6 @@ class CityController extends Controller
     // Mengembalikan detail kota dengan officeSpaces terkait
     public function show(City $city)
     {
-        // Validasi apakah city ditemukan dan relasi ada
-        // if (!$city) {
-        //     return response()->json(['message' => 'City not found'], 404);
-        // }
 
         // Eager loading pada relasi terkait
         $city->load([

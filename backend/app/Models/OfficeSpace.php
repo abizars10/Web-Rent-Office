@@ -42,11 +42,11 @@ class OfficeSpace extends Model
     // hasMany karna 1 officespace memiliki banyak photo(s) 
     public function photos(): HasMany
     {
-        return $this->hasMany(OfficeSpacePhoto::class);
+        return $this->hasMany(OfficeSpacePhoto::class, 'office_space_id');
     }
     // hasMany karna 1 officespace memiliki banyak benefit(s) 
     public function benefits(): HasMany
     {
-        return $this->hasMany(OfficeSpaceBenefit::class);
+        return $this->hasMany(OfficeSpaceBenefit::class, 'office_space_id');
     }
 }
