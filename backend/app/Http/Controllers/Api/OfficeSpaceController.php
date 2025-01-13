@@ -11,6 +11,7 @@ class OfficeSpaceController extends Controller
 {
     public function index()
     {
+        // $officeSpaces= OfficeSpace::with(['city'])->get();
         $officeSpaces = OfficeSpace::with(['city', 'photos', 'benefits'])->withCount('city')->get();
         return OfficeSpaceResource::collection($officeSpaces);
     }
