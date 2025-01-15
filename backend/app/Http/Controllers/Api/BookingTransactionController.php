@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreBookingTransactionRequest;
-use App\Http\Resources\Api\BookingTransactionResource;
-use App\Http\Resources\Api\ViewBookingResource;
-use App\Models\BookingTransaction;
+use Twilio\Rest\Client;
 use App\Models\OfficeSpace;
 use Illuminate\Http\Request;
+use App\Models\BookingTransaction;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\Api\ViewBookingResource;
+use App\Http\Requests\StoreBookingTransactionRequest;
+use App\Http\Resources\Api\BookingTransactionResource;
 
 class BookingTransactionController extends Controller
 {
@@ -40,6 +41,27 @@ class BookingTransactionController extends Controller
         $bookingTransaction = BookingTransaction::create($validateData);
 
         // mengirim notif melalui sms atau wa dengan twilio
+        // Find your acount SID and Auth Token at Twilio.com/console
+        // and set the environment variables. See httpL//twil.io/secure
+        $sid = getenv("TWILIO_ACCOUNT_SID");
+        $token = getenv("TWILIO_AUTH_TOKEN");
+        $twilio = new Client($sid, $token); 
+
+        // Create the message with line breaks
+        $messageBody = "Hi {$bookingTransaction->name}, Terima kasih telah booking kantor di FirstOffice.\n\n";
+        $messageBody .= "Pesanan kantor {$bookingTransaction->officeSpace->name} Anda sedang kami proses dengan Booking TRX ID: {$bookingTransaction->booking_trx_id}.\n\n";
+        $messageBody .= "Kami akan menginformasikan kembali status pemesanan Anda secepat mungkin.";
+
+        // Kirim dengan fitur sms
+        $message = $twilio->messages->create(
+            "+{$bookingTransaction->phone_number}",
+            // "+6289514483012", 
+            // to
+            [
+                "body" => $messageBody,
+                "from" => getenv("TWILIO_PHONE_NUMBER"),
+            ]
+            );
 
         // mengmbalikan response hasil transaksi
         $bookingTransaction->load('officeSpace');

@@ -4,6 +4,7 @@ import { Office } from "../types/type";
 import { z } from "zod";
 import axios from "axios";
 import { bookingSchema } from "../types/validationBooking";
+import Navbar from "../components/Navbar";
 
 export default function BookOffice() {
   const { slug } = useParams<{ slug: string }>();
@@ -137,6 +138,7 @@ export default function BookOffice() {
 
   return (
     <>
+      <Navbar></Navbar>
       <div id="Banner" className="relative w-full h-[240px] flex items-center shrink-0 overflow-hidden -mb-[50px]">
         <h1 className="text-center mx-auto font-extrabold text-[40px] leading-[60px] text-white mb-5 z-20">Start Booking Your Office</h1>
         <div className="absolute w-full h-full bg-[linear-gradient(180deg,_rgba(0,0,0,0)_0%,#000000_91.83%)] z-10" />
