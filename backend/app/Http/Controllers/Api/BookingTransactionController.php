@@ -53,16 +53,26 @@ class BookingTransactionController extends Controller
         $messageBody .= "Kami akan menginformasikan kembali status pemesanan Anda secepat mungkin.";
 
         // Kirim dengan fitur sms
-        $message = $twilio->messages->create(
-            "+{$bookingTransaction->phone_number}",
-            // "+6289514483012", 
-            // to
-            [
-                "body" => $messageBody,
-                "from" => getenv("TWILIO_PHONE_NUMBER"),
-            ]
-            );
+        // $message = $twilio->messages->create(
+        //     "+{$bookingTransaction->phone_number}",
+        //     // "+6289514483012", 
+        //     // to
+        //     [
+        //         "body" => $messageBody,
+        //         "from" => getenv("TWILIO_PHONE_NUMBER"),
+        //     ]
+        //     );
 
+        // Kirim pesan dengan fitur whatsapp
+        $message = $twilio->messages
+        ->create("whatsapp:+{$bookingTransaction->phone_number}",
+        // to
+        array(
+            "from" => "whatsapp:+14155238886",
+            "body" => $messageBody,
+        )
+        );
+        
         // mengmbalikan response hasil transaksi
         $bookingTransaction->load('officeSpace');
         return new BookingTransactionResource($bookingTransaction);

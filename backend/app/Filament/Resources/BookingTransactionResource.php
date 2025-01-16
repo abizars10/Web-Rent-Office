@@ -54,8 +54,6 @@ class BookingTransactionResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
-
                 Tables\Actions\Action::make('approve')
                     ->label('Approve')
                     ->action(function (BookingTransaction $record) {
@@ -67,26 +65,36 @@ class BookingTransactionResource extends Resource
 
                         // find your account SID and Auth Token at twilio.com/console
                         // and set the environment variables. See http://twil.io/secure
-                        $sid = getenv("TWILIO_ACCOUNT_SID");
-                        $token = getenv("TWILIO_AUTH_TOKEN");
+                        $sid = getenv('TWILIO_ACCOUNT_SID');
+                        $token = getenv('TWILIO_AUTH_TOKEN');
                         $twilio = new Client($sid, $token);
 
                         // create the message with line breaks
                         $messageBody = "Hi {$record->name}, pemesanan Anda dengan kode {$record->booking_trx_id} sudah terbayar penuh.\n\n";
                         $messageBody .= "Silahkan datang kepada lokasi kantor {$record->officeSpace->name} untuk mulai menggunakan ruangna kerja tersebut.\n\n";
-                        $messageBody .= "Jika Anda memiliki pertanyaan silahkan menghubungi CS kami di buildwithangga.com/contact-us.";
+                        $messageBody .= 'Jika Anda memiliki pertanyaan silahkan menghubungi CS kami di buildwithangga.com/contact-us.';
 
+                        // sms
+                        // $message = $twilio->messages->create("+{$record->phone_number}", [
+                        //     'body' => $messageBody,
+                        //     'from' => getenv('TWILIO_PHONE_NUMBER'),
+                        // ]);
+
+                        // whatsapp
                         $message = $twilio->messages->create(
-                            "+{$record->phone_number}",
+                            "whatsapp:+{$record->phone_number}",
+                            // to
                             [
-                                "body" => $messageBody,
-                                "from" => getenv("TWILIO_PHONE_NUMBER"),
-                            ]
-                            );
+                                'from' => 'whatsapp:+14155238886',
+                                'body' => $messageBody,
+                            ],
+                        );
                     })
                     ->color('success')
                     ->requiresConfirmation()
-                    ->visible(fn (BookingTransaction $record) => !$record->is_paid),
+                    ->visible(fn(BookingTransaction $record) => !$record->is_paid),
+
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([Tables\Actions\BulkActionGroup::make([Tables\Actions\DeleteBulkAction::make()])]);
     }
